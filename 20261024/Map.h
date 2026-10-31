@@ -1,44 +1,69 @@
 #pragma once
-#include<vector>
-#include"Config.h"
+#include <vector>
+#include "Config.h"
+#include"Collision.h"
 class Map
 {
 private:
-	//ファイル読み込み
-	bool LoadMap(const char* filePath, std::vector < std::vector<int>>& mapDate);
+	//ファイルを読み込み
+	/// <summary>
+	/// ロードマップ
+	/// </summary>
+	/// <param name="filePath">マップCSVファイルパス</param>
+	/// <param name="mapData">マップチップイメージ</param>
+	/// <returns>描画判定</returns>
+	bool LoadMap(const char* filePath, std::vector<std::vector<int>>& mapData);
 
-	void DrawLayer(const std::vector<std::vector<int>>& mapData)const;
+	/// <summary>
+	/// 描画レイヤー
+	/// </summary>
+	/// <param name="mapData">マップチップイメージ</param>
+	void DrawLayer(const std::vector<std::vector<int>>& mapData) const;
 
-	bool IsValidMapPosition(int mapX, int mapY);
+	/// <summary>
+	/// 描画フラグ
+	/// </summary>
+	/// <param name="mapX">X座標</param>
+	/// <param name="mapY">Y座標</param>
+	/// <returns>描画フラグ</returns>
+	bool IsValidMapPosition(int mapX, int mapY) const;
+
+	void HitCalc(Collision& changeRect)const;
+
+	void GetBlockType(int mapX,int mapY)const;
+
+	unsigned char GetBlockInfo(int mapX, int mapY)const;
 
 	int chipImages[Config::MAP_CHIP_IMAGE_COUNT];
 	//マップの内容
-	std::vector<std::vector<int>>backMap;
-	std::vector<std::vector<int>>baseMap;
-	std::vector<std::vector<int>>nearMap;
-
+	std::vector<std::vector<int>> backMap;
+	std::vector<std::vector<int>> baseMap;
+	std::vector<std::vector<int>> nearMap;
 
 	int mapXNum;
 	int mapYNum;
 	bool isInitialized;
 public:
+	//コンストラクタ＆デストラクタ
 	Map();
 	~Map();
 
 	//画像とCSVを読み込み
-	
 
 	/// <summary>
-	/// 画像読み込みの初期化
+	/// 画像読み込み初期化
 	/// </summary>
 	/// <returns>初期化内容</returns>
 	bool Init();
 
+	//マップを奥から手前の順に描画
 
-	void Draw()const;
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw() const;
 
-	//DxLib終了前に呼び出して画像
+	//Dxlib終了前に呼び出して画像などを解放
 	void Finalize();
-
 };
 
